@@ -19,12 +19,24 @@ def start():
 
 
 def api_request(from_currency,to_currency):
-    
+    try:
         API_ACCESS_KEY=os.environ.get("API_ACCESS_KEY")
         res=requests.get(f"https://v6.exchangerate-api.com/v6/{API_ACCESS_KEY}/latest/{from_currency}")
+        if res.status_code!=200:
+            raise Exception("invalid-key")
         json_obj=json.loads(res.text)
-        result=json_obj['conversion_rates'][to_currency]
-        time_last_update=json_obj['time_last_update_utc']
+        if(json_obj['result']!='success'):
+            raise Exception(json_obj['error-type'])
+    except Exception as exc:
+        print(exc)
+        exit()
+    else:
+        try:
+            result=json_obj['conversion_rates'][to_currency]
+            time_last_update=json_obj['time_last_update_utc']
+        except Exception:
+            print("unsupported-code")
+            exit()
 
     return result,time_last_update
     
