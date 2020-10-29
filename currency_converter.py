@@ -11,14 +11,27 @@ def load_env():
         print(API_ACCESS_KEY)
         
 
+def get_help():
+    with open('currency_code.txt','r') as file:
+        print(file.read())
+    exit()
+
+
 def start():
     print(" if you want to get some help about currency code type help ")
     from_currency=input(" enter currency code that you want to convert from ")
+    if from_currency.lower()=='help':
+        get_help()
     to_currency=input(" enter currency code that you want to convert from ")
+
+    if to_currency.lower()=='help':
+        get_help()
+
     return from_currency.upper(),to_currency.upper()
 
 
 def api_request(from_currency,to_currency):
+    
     try:
         API_ACCESS_KEY=os.environ.get("API_ACCESS_KEY")
         res=requests.get(f"https://v6.exchangerate-api.com/v6/{API_ACCESS_KEY}/latest/{from_currency}")
